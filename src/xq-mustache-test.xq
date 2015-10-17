@@ -96,3 +96,12 @@ import module namespace mustache = 'http://xq-mustache' at 'xq-mustache.xqm';
    return
      unit:assert-equals($out, 'No values')
  };
+
+ declare %unit:test function test:mustache-is() {
+   let $f := mustache:is-mustache(?) 
+   return (
+     unit:assert-equals($f('{{John}} doe is'), true()),
+     unit:assert-equals($f('{{#list}}Template{{/list}}'), true()),
+     unit:assert-equals($f('John doe is'), false())
+   )
+ };

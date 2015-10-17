@@ -15,7 +15,7 @@ See <a href="https://mustache.github.io/">Mustache.js</a> for details.
 <pre>import module namespace mustache = 'http://xq-mustache';</pre>
 
 <h3>Methods</h3>
-This module includes two methods in the spirit of Mustache. The methods are <code>render</code> and <code>compile</code>. <br />
+This module includes three methods in the spirit of Mustache. The methods are <code>render</code> and <code>compile</code> and <code>is-mustache</code>. <br />
 The render method can take a raw string or compiled expression.
 <pre>
 render($template as item(), $hash as map(*)) as xs:string {
@@ -24,6 +24,11 @@ render($template as item(), $hash as map(*)) as xs:string {
 Compiling templates is as easy as calling: 
 <pre>
 compile($template as item()) as element(fn:analyze-string-result) {
+</pre>
+
+To check if a string contains a mustache expression simply use:
+<pre>
+is-mustache($string as xs:string) as xs:boolean
 </pre>
 
 <h3>Usage</h3>

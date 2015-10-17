@@ -7,6 +7,11 @@
 module namespace mustache = 'http://xq-mustache';
 
 (: Regex expressions used to compile templates :)
+declare variable $mustache:is-mustache-regex := '\{{2}.*\}{2}';
+declare function mustache:is-mustache($str as xs:string) as xs:boolean {
+  matches($str, $mustache:is-mustache-regex) 
+};
+
 declare variable $mustache:var-regex := '(\{{2}[^#^]\w*?\}{2})';
 declare variable $mustache:var := 1;
 
@@ -18,7 +23,7 @@ declare variable $mustache:section-template := 5;
 declare variable $mustache:regex := ($mustache:var-regex, $mustache:section-regex) => string-join('|');
 
 (:Remove the mustache {, }, # and / characters:)
-declare variable $mustache:clean := replace(?, '[#]|/|\{|\}', '');
+declare variable $mustache:clean := replace(?, '[#/{}]', '');
 
 declare function mustache:bool($item as item()*) as xs:boolean {
    $item instance of map(*) or boolean($item) 
