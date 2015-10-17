@@ -20,6 +20,10 @@ declare variable $mustache:regex := ($mustache:var-regex, $mustache:section-rege
 (:Remove the mustache {, }, # and / characters:)
 declare variable $mustache:clean := replace(?, '[#]|/|\{|\}', '');
 
+declare function mustache:bool($item as item()*) as xs:boolean {
+   $item instance of map(*) or boolean($item) 
+};
+
 (: Compiles a template for faster re-use :)
 declare function mustache:compile($template as xs:string) as element(fn:analyze-string-result) {
   copy $out := analyze-string($template, $mustache:regex)
@@ -48,19 +52,19 @@ declare function mustache:render($template as item(), $hash as map(*)) as xs:str
       for $section in $out/fn:match/fn:group[@nr = $mustache:section]
       let $name := $section/fn:group[@nr = $mustache:section-name]
       let $isInversion := starts-with($name, '^') 
-      let $compiled := $section/fn:analyze-string-result
+      let $sub-template := $section/fn:analyze-string-result
       return 
         replace value of node $section with ( 
-          if($isInversion and not($hash(substring($name, $mustache:section)))) then
-            mustache:render($compiled, $hash)          
+          if($isInversion and not(mustache:bool($hash(substring($name, 2))))) then
+            mustache:render($sub-template, $hash)          
           else (
              let $value := $hash($name)
              let $items := if($value instance of array(*)) then $value?* else $value 
              return
               for $item in $items 
-              where $item instance of map(*) or boolean($item) 
+              where mustache:bool($item)  
               return
-              mustache:render($compiled, map:merge(($hash, $item)))
+               mustache:render($sub-template, map:merge(($hash, $item)))
           ) => string-join(' ')
         )  
      )
