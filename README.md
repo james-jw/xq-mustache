@@ -2,6 +2,15 @@
 Partial implementation of the mustache template language for XQuery 3.1. <p />
 See <a href="https://mustache.github.io/">Mustache.js</a> for details.
 
+<h3>Whats implemented</h3>
+<ul>
+  <li>Variables</li>
+  <li>Conditionals</li>
+  <li>Sections</li>
+  <li>Inverse Sections</li>
+  <li>Template compilation</li>
+</ul>
+
 <h3>Namespace</h3>
 <pre>import module namespace mustache = 'http://xq-mustache';</pre>
 
