@@ -8,22 +8,23 @@ declare function mustache:render($template as xs:string, $hash as map(*)) as xs:
   let $regex := string-join(($varRegex, $section), '|')
   let $analysis := analyze-string($template, $regex)
   return 
-    copy $out := trace($analysis)
+    copy $out := $analysis
     modify ( 
       for $var in $out//fn:group[@nr = 1]
       let $name := $mustache:clean($var) 
       return 
         replace value of node $var with $hash($name),
       for $section in $out/fn:match/fn:group[@nr = 2]
-      let $name := $mustache:clean(trace($section/fn:group[@nr = 3]))
-      return replace value of node $section with ( 
-        if(starts-with(trace($name), '^') and not($hash(substring($name, 2)))) then
-          mustache:render(trace($section/fn:group[@nr = 4]), $hash)          
-        else (
-          for $item in $hash($name)?* return 
-            mustache:render($section/fn:group[@nr = 4], map:merge(($hash, $item)))
-        ) => string-join(' ')
-      )  
+      let $name := $mustache:clean($section/fn:group[@nr = 3])
+      return 
+        replace value of node $section with ( 
+          if(starts-with($name, '^') and not($hash(substring($name, 2)))) then
+            mustache:render($section/fn:group[@nr = 4], $hash)          
+          else (
+            for $item in $hash($name)?* return 
+              mustache:render($section/fn:group[@nr = 4], map:merge(($hash, $item)))
+          ) => string-join(' ')
+        )  
      )
    return $out
 };
