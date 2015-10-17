@@ -38,6 +38,10 @@ return
    mustache:render($compiled, map:merge(($hash, map { 'index': $i }))) 
 </pre>
 
+<h4>Unit Tests</h4>
+If using BaseX, unit tests can be run from BaseX via the command line:
+<pre>basex -t src/xq-mustache-test.xqm</pre>
+
 <h4>Limitations</h4>
 Lambdas are not supported
 
