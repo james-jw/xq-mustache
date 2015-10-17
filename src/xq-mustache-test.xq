@@ -34,6 +34,48 @@ import module namespace mustache = 'http://xq-mustache' at 'xq-mustache.xqm';
      unit:assert-equals($out, 'Value is apple Value is orange') 
  };
 
+ declare %unit:test function test:mustache-sub-sections() {
+   let $template := '{{#list}}Value: {{#values}}{{value}}{{/values}}{{/list}}'
+   let $hash := map {
+      'list': array {
+        map { 
+          'values': array {
+            map { 'value': 'apple' }, 
+            map { 'value': 'grape' }
+          }
+        },
+        map { 
+          'values': map {
+            'value': 'orange' 
+          }
+        }
+      }
+   } 
+   let $out := mustache:render($template, $hash)
+   return
+     unit:assert-equals($out, 'Value: apple grape Value: orange') 
+ };
+
+ declare %unit:test function test:mustache-no-array-section() {
+   let $template := '{{#list}}Value is {{value}}{{/list}}'
+   let $hash := map {
+      'list': map { 'value': 1.2 } 
+   } 
+   let $out := mustache:render($template, $hash)
+   return
+     unit:assert-equals($out, 'Value is 1.2') 
+ };
+
+ declare %unit:test function test:mustache-false-section() {
+   let $template := 'Should be just this{{#list}}Value is {{value}}{{/list}}'
+   let $hash := map {
+      'list': false() 
+   } 
+   let $out := mustache:render($template, $hash)
+   return
+     unit:assert-equals($out, 'Should be just this') 
+ };
+
  declare %unit:test function test:mustache-empty-list() {
    let $template := '{{#list}}Value is {{value}}{{/list}}'
    let $hash := map {
