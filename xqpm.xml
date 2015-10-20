@@ -3,7 +3,7 @@
 <config>
   <dependencies>
     <directory path="{{repo}}">
-      <dependency name="mustache-install" type="command" path="basex">
+      <dependency name="mustache-install" type="command" path="{{base}}/bin/basex">
         <argument>-c"repo install '{{repo}}/xq-mustache/src/xq-mustache.xqm'"</argument>
       </dependency>
     </directory>
