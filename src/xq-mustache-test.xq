@@ -56,6 +56,27 @@ import module namespace mustache = 'http://xq-mustache' at 'xq-mustache.xqm';
      unit:assert-equals($out, 'Value: apple grape Value: orange') 
  };
 
+ declare %unit:test function test:mustache-performance() {
+   let $template := mustache:compile('{{#list}}Value: {{#values}}{{value}}{{/values}}{{/list}}')
+   let $hash := map {
+      'list': array {
+        map { 
+          'values': array {
+            map { 'value': 'apple' }, 
+            map { 'value': 'grape' }
+          }
+        },
+        map { 
+          'values': map {
+            'value': 'orange' 
+          }
+        }
+      }
+   } 
+   return
+       (1 to 1000) ! mustache:render($template, $hash)
+ };
+
  declare %unit:test function test:mustache-no-array-section() {
    let $template := '{{#list}}Value is {{value}}{{/list}}'
    let $hash := map {
