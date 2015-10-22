@@ -126,3 +126,17 @@ import module namespace mustache = 'http://xq-mustache' at 'xq-mustache.xqm';
      unit:assert-equals($f('John doe is'), false())
    )
  };
+
+ declare %unit:test function test:mustache-lambda() {
+   let $template := '{{#welcome}}{{name}}s{{/welcome}}'
+   let $hash := map {
+      'name': 'world',
+      'welcome': function ($template, $hash) {
+         'Hello ' || mustache:render($template, $hash) || '!' 
+      }
+   }
+   let $out := mustache:render($template, $hash)
+   return
+     unit:assert-equals($out, 'Hello worlds!')
+
+ };

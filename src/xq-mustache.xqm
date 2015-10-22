@@ -29,16 +29,16 @@ declare variable $mustache:clean := replace(?, '[#/{}]', '');
  : @param $template String mustache template, or compiled template.
  : @param $hash Hash map containing data to populate template
  :)
-declare function mustache:render($template as item(), $hash as map(*)) {
-  let $template := if($template instance of xs:string)
+declare function mustache:render($template as item()*, $hash as map(*)) as xs:string? {
+  let $template := if(count($template) = 1 and $template instance of xs:string)
                    then mustache:compile($template)
                    else $template
   return
-    mustache:internal-render($template, $hash) => string-join('')
+    ($template ! mustache:internal-render(., $hash)) => string-join('')
 };
 
 declare function mustache:bool($item as item()?) as xs:boolean {
-  $item instance of map(*) or $item
+  $item instance of map(*) or (not($item instance of function(*)) and $item)
 };
 
 (: Compiles a template for faster re-use :)
@@ -83,20 +83,23 @@ declare %private function mustache:internal-compile($template as element()) {
 };
 
 declare %private function mustache:internal-render($template as item()*, $hash as map(*)*) {
-  ( $template ! (if(. instance of function(*)) then .($hash) else .)) ! xs:string(.)
+  ($template ! (if(. instance of function(*)) 
+                then .($hash) 
+                else .)
+  ) ! xs:string(.)
 };
 
 declare %private function mustache:internal-render($template as item()*, $path as xs:string, $hash as map(*)*) as xs:string* {
    let $sub-hash := mustache:get($path, $hash)
    let $count := count($sub-hash)
    return 
-     if(mustache:bool($sub-hash[1]) or $count > 1) 
-     then
+     if(mustache:bool($sub-hash[1]) or $count > 1) then
        for $sub at $i in $sub-hash return (
          mustache:internal-render($template, ($sub, $hash)), 
          if($count > 1 and $i < ($count)) then ' '
-         else ()
-       )
+         else ())
+     else if($sub-hash instance of function(*)) then 
+       $sub-hash($template, $hash)
      else ()
 };
 
