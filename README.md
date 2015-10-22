@@ -6,35 +6,31 @@ See <a href="https://mustache.github.io/">Mustache.js</a> for details.
 * Variables
 * Conditionals
 * Sections
-* Inverse Sections
-* Template compilation
+* Inverseions
+* Compilation
 * Lambdas
 
 ### Namespace
-```xquery
-mport module namespace mustache = 'http://xq-mustache'; 
-```
+``http://xq-mustache``
+
+### Dependencies
+None
 
 ### Methods
 This module includes three simple methods in the spirit of Mustache: <code>render</code>, <code>compile</code> and <code>is-mustache</code>. <br />
 
-##### render
-The render method can take a raw string or compiled expression.
+The render method can take a raw string or compiled expression and returns a rendered string.
 ```xquery
-render($template as item(), $hash as map()) as xs:string {
+render($template as item(), $hash as map()) as xs:string 
 ```
-
-##### compile
-Compiling templates is as easy as calling: 
+Compiling a template is as easy as calling the following: 
 ```xquery
-compile($template as item()) as element(fn:analyze-string-result) {
+compile($template as item()) as element(fn:analyze-string-result) 
 ```
-##### is-mustache
 To check if a string contains a mustache expression simply use:
 ```xquery
 is-mustache($string as xs:string) as xs:boolean
 ```
-
 ### Usage
 Import into your XQuery module or script and call <code>render</code> providing a template and hash.
 
@@ -45,7 +41,7 @@ return
   mustache:render('Hello {{word}}!', $hash) 
 ```
 #### Compiling
-If the template is going to be used multiple times you can increase performance by compiling the expression:
+If the template is going to be used multiple times you can increase performance significantly by compiling the expression:
 ```xquery
 import module namespace mustache = 'http://xq-mustache';
 let $hash := map { 'word': 'world' }
@@ -56,7 +52,7 @@ let $compiled := mustache:compile('Hello {{word}} {{index}}!')
       mustache:render($compiled, map:merge(($hash, map { 'index': $i }))) 
 ```
 #### Lambdas
-Lambdas allow for powerful patterns. For example wrapping. The following would return 
+Lambdas allow for powerful patterns such as wrapping. For example, the following would return 
 <code>Hello World!</code>
 
 ```xquery
