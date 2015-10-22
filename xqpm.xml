@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- Represents an example xq-ant collect file -->
-<config>
+<config name="http://xq-mustache" abbrev="xq-mustache" version="0.8">
   <dependencies>
     <directory path="{{repo}}">
-      <dependency name="mustache-install" type="command" path="{{base}}/bin/basex">
+      <dependency name="xq-mustache" />
+      <dependency name="install" type="command" path="{{base}}/bin/basex">
         <argument>-c"repo install '{{repo}}/xq-mustache/src/xq-mustache.xqm'"</argument>
       </dependency>
     </directory>
