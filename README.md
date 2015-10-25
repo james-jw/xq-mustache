@@ -6,7 +6,7 @@ See <a href="https://mustache.github.io/">Mustache.js</a> for details.
 * Variables
 * Conditionals
 * Sections
-* Inverseions
+* Inversions
 * Compilation
 * Lambdas
 
@@ -49,7 +49,7 @@ let $compiled := mustache:compile('Hello {{word}} {{index}}!')
   return
   for $i in (1 to 1000)
     return
-      mustache:render($compiled, map:merge(($hash, map { 'index': $i }))) 
+      mustache:render($compiled, ($hash, map { 'index': $i })) 
 ```
 #### Lambdas
 Lambdas allow for powerful patterns such as wrapping. For example, the following would return 
