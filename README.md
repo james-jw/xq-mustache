@@ -49,7 +49,7 @@ let $compiled := mustache:compile('Hello {{word}} {{index}}!')
   return
   for $i in (1 to 1000)
     return
-      mustache:render($compiled, ($hash, map { 'index': $i })) 
+      mustache:render($compiled, (map { 'index': $i }, $hash)) 
 ```
 #### Lambdas
 Lambdas allow for powerful patterns such as wrapping. For example, the following would return 
